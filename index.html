@@ -2106,93 +2106,112 @@ function processFile(file) {
   reader.readAsText(file, 'UTF-8');
 }
 
-/* ─── Simple YAML parser (handles our exported format only) ─── */
+/* ─── Robust YAML parser: handles multi-line & quoted detail fields ─── */
 function parseYAML(content) {
-  try {
-    const lines = content.split('\n');
-    const tasks = [];
-    const projects = [];
-    let mode = null;        // 'tasks' | 'projects'
-    let currentTask = null;
+  /* Strategy:
+     1. Split into task blocks using "  - date:" as delimiter (our export always starts each task with date)
+     2. Extract simple fields via per-field regex (immune to multi-line detail)
+     3. Extract detail as EVERYTHING between "    detail:" line and "    id:" line
+  */
 
-    const VALID_STATUSES = ['To-do','In Progress','In Review','Done','Delayed','Blocked','Canceled','Not Executed'];
-    const VALID_PRIORITIES = ['Low','Medium','High','Critical'];
-
-    const yval = s => {
-      s = s.trim();
-      if (s.startsWith('"') && s.endsWith('"')) return s.slice(1, -1);
-      if (s.startsWith("'") && s.endsWith("'")) return s.slice(1, -1);
-      return s;
-    };
-
-    for (const rawLine of lines) {
-      const stripped = rawLine.trimEnd();
-      if (!stripped || stripped.trimStart().startsWith('#')) continue;
-
-      const indent = stripped.length - stripped.trimStart().length;
-      const line   = stripped.trimStart();
-
-      // top-level keys
-      if (indent === 0) {
-        if (currentTask) { tasks.push(currentTask); currentTask = null; }
-        if (line === 'tasks:')    { mode = 'tasks'; continue; }
-        if (line === 'projects:') { mode = 'projects'; continue; }
-        mode = null; continue;
-      }
-
-      if (mode === 'projects' && indent === 2 && line.startsWith('- ')) {
-        projects.push(line.slice(2).trim());
-        continue;
-      }
-
-      if (mode === 'tasks') {
-        if (indent === 2 && line.startsWith('- ')) {
-          if (currentTask) tasks.push(currentTask);
-          // inline field after dash
-          const rest = line.slice(2).trim();
-          currentTask = { id: uuid(), createdAt: Date.now(), updatedAt: Date.now() };
-          if (rest.includes(':')) {
-            const ki = rest.indexOf(':');
-            const k = rest.slice(0, ki).trim();
-            const v = yval(rest.slice(ki + 1));
-            currentTask[k] = v;
-          }
-          continue;
-        }
-        if (indent >= 4 && currentTask && line.includes(':')) {
-          const ki = line.indexOf(':');
-          const k  = line.slice(0, ki).trim();
-          const v  = yval(line.slice(ki + 1));
-          currentTask[k] = v;
-          continue;
-        }
-      }
-    }
-    if (currentTask) tasks.push(currentTask);
-
-    // Normalise & validate
-    const valid = tasks
-      .filter(t => t.date && t.task)
-      .map(t => ({
-        id       : t.id || uuid(),
-        date     : t.date || todayISO(),
-        project  : (t.project || 'IMPORT').toUpperCase(),
-        task     : t.task,
-        status   : VALID_STATUSES.includes(t.status) ? t.status : 'To-do',
-        priority : VALID_PRIORITIES.includes(t.priority) ? t.priority : 'Medium',
-        owner    : t.owner || '',
-        dueDate  : t.dueDate || '',
-        detail   : t.detail || '',
-        createdAt: t.createdAt || Date.now(),
-        updatedAt: Date.now(),
-      }));
-
-    if (projects.length) state.pendingProjects = projects;
-    showImportResult(valid);
-  } catch(e) {
-    document.getElementById('parse-result').className = 'parse-result err';
-    document.getElementById('parse-result').textContent = '❌ YAML parse error: ' + e.message;
+  // ── 1. Extract projects section ──
+  const projects = [];
+  const projSection = content.match(/^projects:\n([\s\S]*?)(?=^\w|\ntasks:)/m);
+  if (projSection) {
+    projSection[1].split('\n').forEach(l => {
+      const t = l.trimStart();
+      if (t.startsWith('- ')) projects.push(t.slice(2).trim());
+    });
   }
+
+  // ── 2. Split into task blocks ──
+  const taskBlocks = [];
+  const taskStart = /^  - date:/gm;
+  const matches = [...content.matchAll(taskStart)];
+  for (let i = 0; i < matches.length; i++) {
+    const start = matches[i].index;
+    const end   = i + 1 < matches.length ? matches[i + 1].index : content.length;
+    taskBlocks.push(content.slice(start, end));
+  }
+
+  // ── 3. Field helpers ──
+  function getField(block, name, isFirstLine) {
+    let re;
+    if (isFirstLine) {
+      // "  - date:     VALUE"
+      re = new RegExp(`^  - ${name}:\\s*(.*)$`, 'm');
+    } else {
+      // "    name:   VALUE"
+      re = new RegExp(`^    ${name}:\\s*(.*)$`, 'm');
+    }
+    const m = block.match(re);
+    return m ? unq(m[1].trim()) : '';
+  }
+
+  function unq(s) {
+    if (!s || s === "''" || s === '""') return '';
+    // single-line quoted string
+    if ((s[0] === '"' || s[0] === "'") && s[s.length - 1] === s[0] && s.length > 1)
+      return s.slice(1, -1);
+    return s;
+  }
+
+  function getDetail(block) {
+    // Grab everything between "    detail:   " and "\n    id:   "
+    // The `s` (dotAll) flag lets . match newlines
+    const m = block.match(/^    detail:\s*([\s\S]*?)(?=\n    id:)/m);
+    if (!m) {
+      // No id line found — grab to end of block
+      const m2 = block.match(/^    detail:\s*(.*)$/m);
+      return m2 ? unq(m2[1].trim()) : '';
+    }
+    let raw = m[1];
+    // Strip surrounding multi-line quotes  "..." or '...'
+    const r = raw.trim();
+    if (r.length > 1 &&
+        ((r[0] === '"' && r[r.length - 1] === '"') ||
+         (r[0] === "'" && r[r.length - 1] === "'"))) {
+      return r.slice(1, -1).trim();
+    }
+    return r;
+  }
+
+  // ── 4. Parse each block ──
+  const VALID_STATUSES  = ['To-do','In Progress','In Review','Done','Delayed','Blocked','Canceled','Not Executed'];
+  const VALID_PRIORITIES = ['Low','Medium','High','Critical'];
+
+  const tasks = taskBlocks.map(block => ({
+    id      : getField(block, 'id')       || uuid(),
+    date    : getField(block, 'date', true),
+    project : getField(block, 'project'),
+    task    : getField(block, 'task'),
+    status  : getField(block, 'status'),
+    priority: getField(block, 'priority'),
+    owner   : getField(block, 'owner'),
+    dueDate : getField(block, 'dueDate'),
+    detail  : getDetail(block),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  }));
+
+  const valid = tasks
+    .filter(t => t.date && t.task)
+    .map(t => ({
+      id      : t.id,
+      date    : t.date,
+      project : (t.project || 'IMPORT').toUpperCase(),
+      task    : t.task,
+      status  : VALID_STATUSES.includes(t.status)   ? t.status   : 'To-do',
+      priority: VALID_PRIORITIES.includes(t.priority)? t.priority : 'Medium',
+      owner   : t.owner   || '',
+      dueDate : t.dueDate || '',
+      detail  : t.detail  || '',
+      createdAt: t.createdAt || Date.now(),
+      updatedAt: Date.now(),
+    }));
+
+  if (projects.length) state.pendingProjects = projects;
+  showImportResult(valid);
 }
 
 /* ─── YAML export (hand-rolled, no library needed) ─── */
