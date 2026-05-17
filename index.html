@@ -233,19 +233,22 @@
     border-radius: var(--radius); color: var(--text);
     padding: 6px 12px; font-size: 13px;
     transition: border-color var(--transition); color-scheme: dark;
+    font-family: 'Sora', sans-serif;
   }
   .clone-bar input[type="date"]:focus { border-color: var(--purple); outline: none; }
-  .clone-preview-list { display:flex; flex-direction:column; gap:6px; max-height:340px; overflow-y:auto; }
+  .clone-preview-list { display:flex; flex-direction:column; gap:5px; max-height:360px; overflow-y:auto; }
   .clone-preview-item {
     display:flex; align-items:center; gap:10px;
     padding:9px 12px; background:var(--bg3);
-    border:1px solid var(--border); border-radius:var(--radius); font-size:13px;
+    border:1px solid var(--border); border-radius:var(--radius);
+    font-size:13px; transition:background .15s;
+    user-select:none;
   }
   .clone-preview-item .ci-name { flex:1; font-weight:500; }
   .clone-preview-item .ci-proj {
     font-size:11px; font-family:'JetBrains Mono',monospace;
     color:var(--purple); background:var(--purple-bg);
-    padding:2px 8px; border-radius:20px;
+    padding:2px 8px; border-radius:20px; white-space:nowrap; flex-shrink:0;
   }
   .clone-info-box {
     margin-bottom:14px; padding:10px 14px;
@@ -995,9 +998,13 @@
         <!-- CLONE BAR -->
         <div class="clone-bar">
           <span class="clone-bar-label">⧉ Clone Tasks</span>
-          <input type="date" id="clone-source-date" color-scheme="dark" title="Chọn ngày muốn clone tasks" />
-          <button class="btn btn-clone btn-sm" onclick="openClonePreview()">⧉ Clone All Tasks → Hôm nay</button>
-          <span style="font-size:11px;color:var(--text-muted);">Clone toàn bộ task của ngày đã chọn sang <strong style="color:var(--text)">hôm nay</strong>, reset status về <code style="color:var(--purple);font-family:'JetBrains Mono',monospace;">To-do</code></span>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span style="font-size:11px;color:var(--text-muted);">Từ</span>
+            <input type="date" id="clone-source-date" title="Ngày nguồn" />
+            <span style="font-size:11px;color:var(--text-muted);">→ Sang</span>
+            <input type="date" id="clone-target-date" title="Ngày đích" />
+          </div>
+          <button class="btn btn-clone btn-sm" onclick="openClonePreview()">⧉ Chọn Tasks để Clone</button>
         </div>
 
         <div id="all-board"></div>
@@ -1211,18 +1218,58 @@
 
 <!-- ═══════════════ CLONE PREVIEW MODAL ═══════════════ -->
 <div class="modal-overlay" id="clone-modal">
-  <div class="modal" style="max-width:560px;">
+  <div class="modal" style="max-width:580px;">
     <div class="modal-header">
-      <h3>⧉ Clone Tasks → Hôm nay</h3>
+      <h3>⧉ Clone Tasks</h3>
       <button class="modal-close" onclick="closeModal('clone-modal')">✕</button>
     </div>
     <div class="modal-body">
       <div class="clone-info-box" id="clone-info-box"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:11px;color:var(--text-muted);">Chọn task muốn clone:</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm" onclick="cloneSelectAll(true)" style="font-size:11px;padding:3px 10px;">✅ Chọn tất cả</button>
+          <button class="btn btn-sm" onclick="cloneSelectAll(false)" style="font-size:11px;padding:3px 10px;">☐ Bỏ chọn tất cả</button>
+        </div>
+      </div>
       <div class="clone-preview-list" id="clone-preview-list"></div>
     </div>
     <div class="modal-footer">
+      <span id="clone-selected-count" style="font-size:12px;color:var(--text-muted);margin-right:auto;font-family:'JetBrains Mono',monospace;"></span>
       <button class="btn" onclick="closeModal('clone-modal')">Hủy</button>
       <button class="btn btn-clone" onclick="confirmClone()">⧉ Xác nhận Clone</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ RENAME PROJECT MODAL ═══════════════ -->
+<div class="modal-overlay" id="rename-project-modal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-header">
+      <h3>✏️ Đổi tên Project</h3>
+      <button class="modal-close" onclick="closeModal('rename-project-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Tên cũ</label>
+        <div id="rename-project-old"
+          style="padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:13px;"></div>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Tên mới *</label>
+        <input type="text" id="rename-project-input"
+          style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:10px 14px;font-size:14px;width:100%;transition:border-color .18s;font-family:'JetBrains Mono',monospace;"
+          onkeydown="if(event.key==='Enter')saveRenameProject()"
+          onfocus="this.style.borderColor='var(--amber)'"
+          onblur="this.style.borderColor='var(--border)'" />
+        <small style="color:var(--text-muted);font-size:11px;margin-top:4px;">
+          Tên mới sẽ tự động viết hoa. Tất cả tasks thuộc project này sẽ được cập nhật.
+        </small>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('rename-project-modal')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveRenameProject()">💾 Lưu tên mới</button>
     </div>
   </div>
 </div>
@@ -1641,16 +1688,25 @@ function renderAll() {
 function renderProjects() {
   const grid = document.getElementById('projects-grid');
   const c = {};
-  state.tasks.forEach(t => { (c[t.project] = c[t.project] || []). push(t); });
+  state.tasks.forEach(t => { (c[t.project] = c[t.project] || []).push(t); });
 
   let html = state.projects.map(p => {
     const tasks = c[p] || [];
     const done  = tasks.filter(t => t.status === 'Done').length;
     const ip    = tasks.filter(t => t.status === 'In Progress').length;
     const todo  = tasks.filter(t => t.status === 'To-do').length;
-    return `<div class="project-card" onclick="filterAllByProject('${p}')">
-      <div class="project-card-name">${escHTML(p)}</div>
-      <div class="project-card-stats">
+    const safe  = escHTML(p);
+    return `<div class="project-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:6px;">
+        <div class="project-card-name" style="margin-bottom:0;cursor:pointer;" onclick="filterAllByProject('${safe}')">${safe}</div>
+        <div style="display:flex;gap:5px;flex-shrink:0;">
+          <button class="btn btn-sm" title="Sửa tên" onclick="event.stopPropagation();openRenameProject('${safe}')"
+            style="padding:3px 7px;font-size:12px;">✏️</button>
+          <button class="btn btn-sm btn-danger" title="Xoá" onclick="event.stopPropagation();removeProject('${safe}')"
+            style="padding:3px 7px;font-size:12px;">🗑️</button>
+        </div>
+      </div>
+      <div class="project-card-stats" style="cursor:pointer;" onclick="filterAllByProject('${safe}')">
         <span class="project-card-stat" style="color:var(--blue)">⬤ ${ip} running</span>
         <span class="project-card-stat" style="color:var(--green)">⬤ ${done} done</span>
         <span class="project-card-stat" style="color:var(--slate)">⬤ ${todo} todo</span>
@@ -1672,95 +1728,165 @@ function filterAllByProject(proj) {
   renderAll();
 }
 
+function openRenameProject(oldName) {
+  state._renamingProject = oldName;
+  document.getElementById('rename-project-old').textContent = oldName;
+  document.getElementById('rename-project-input').value = oldName;
+  openModal('rename-project-modal');
+  setTimeout(() => {
+    const el = document.getElementById('rename-project-input');
+    el.focus(); el.select();
+  }, 80);
+}
+
+function saveRenameProject() {
+  const oldName = state._renamingProject;
+  const newName = document.getElementById('rename-project-input').value.trim().toUpperCase();
+  if (!newName) return;
+  if (newName === oldName) { closeModal('rename-project-modal'); return; }
+  if (state.projects.includes(newName)) {
+    toast(`Project "${newName}" đã tồn tại!`, 'error'); return;
+  }
+  // Rename in projects list
+  const idx = state.projects.indexOf(oldName);
+  if (idx >= 0) state.projects[idx] = newName;
+  // Rename in all tasks
+  state.tasks.forEach(t => { if (t.project === oldName) t.project = newName; });
+  saveState();
+  refreshProjectDatalist();
+  renderProjects();
+  closeModal('rename-project-modal');
+  toast(`Đã đổi tên "${oldName}" → "${newName}" ✅`, 'success');
+}
+
 /* ══════════════════════════════════════════════════════════════
    CLONE TASKS
 ══════════════════════════════════════════════════════════════ */
 function openClonePreview() {
   const sourceDate = document.getElementById('clone-source-date').value;
-  if (!sourceDate) {
-    toast('Vui lòng chọn ngày muốn clone tasks!', 'error');
-    document.getElementById('clone-source-date').focus();
-    return;
-  }
+  const targetDate = document.getElementById('clone-target-date').value;
 
-  const today = todayISO();
-  if (sourceDate === today) {
-    toast('Ngày nguồn và ngày đích (hôm nay) trùng nhau!', 'error');
-    return;
+  if (!sourceDate) {
+    toast('Vui lòng chọn ngày nguồn!', 'error');
+    document.getElementById('clone-source-date').focus(); return;
+  }
+  if (!targetDate) {
+    toast('Vui lòng chọn ngày đích!', 'error');
+    document.getElementById('clone-target-date').focus(); return;
+  }
+  if (sourceDate === targetDate) {
+    toast('Ngày nguồn và ngày đích không được trùng nhau!', 'error'); return;
   }
 
   const sourceTasks = state.tasks.filter(t => t.date === sourceDate);
   if (!sourceTasks.length) {
-    toast(`Không có task nào trong ngày ${fmtDate(sourceDate)}`, 'error');
-    return;
+    toast(`Không có task nào trong ngày ${fmtDate(sourceDate)}`, 'error'); return;
   }
 
-  // Check for duplicates (same project + task name already exist today)
-  const todayTasks = state.tasks.filter(t => t.date === today);
-  const todayKeys  = new Set(todayTasks.map(t => `${t.project}|${t.task}`));
+  // Mark duplicates (same project + task already exist on target date)
+  const targetTasks = state.tasks.filter(t => t.date === targetDate);
+  const targetKeys  = new Set(targetTasks.map(t => `${t.project}|${t.task}`));
 
-  const newOnes  = sourceTasks.filter(t => !todayKeys.has(`${t.project}|${t.task}`));
-  const skipped  = sourceTasks.filter(t =>  todayKeys.has(`${t.project}|${t.task}`));
+  state.pendingClone = {
+    sourceDate,
+    targetDate,
+    tasks: sourceTasks.map(t => ({
+      ...t,
+      _isDuplicate: targetKeys.has(`${t.project}|${t.task}`),
+    })),
+  };
 
-  // Build info box
+  const dupCount = state.pendingClone.tasks.filter(t => t._isDuplicate).length;
+
   document.getElementById('clone-info-box').innerHTML =
-    `📅 Nguồn: <strong>${isoToDisplay(sourceDate)}</strong> &nbsp;→&nbsp; 🎯 Đích: <strong>Hôm nay (${fmtDate(today)})</strong><br/>
-     ⧉ Sẽ clone <strong>${newOnes.length}</strong> task${newOnes.length !== 1 ? 's' : ''}
-     ${skipped.length ? ` &nbsp;·&nbsp; <span style="color:var(--orange)">⚠️ Bỏ qua ${skipped.length} task đã tồn tại hôm nay</span>` : ''}
-     <br/><span style="font-size:11px;opacity:.8;">Status sẽ được reset về <code style="font-family:'JetBrains Mono',monospace;">To-do</code> cho tất cả task được clone.</span>`;
+    `📅 Nguồn: <strong>${isoToDisplay(sourceDate)}</strong>
+     &nbsp;→&nbsp;
+     🎯 Đích: <strong>${isoToDisplay(targetDate)}</strong><br/>
+     ${dupCount ? `<span style="color:var(--orange)">⚠️ ${dupCount} task đã tồn tại ở ngày đích (vẫn có thể chọn để clone thêm)</span><br/>` : ''}
+     <span style="font-size:11px;opacity:.8;">Status sẽ được reset về
+       <code style="font-family:'JetBrains Mono',monospace;">To-do</code>
+       cho tất cả task được clone.
+     </span>`;
 
-  // Build preview list
-  const listEl = document.getElementById('clone-preview-list');
-  if (!newOnes.length) {
-    listEl.innerHTML = `<div class="empty-state" style="padding:24px 0;">
-      <div class="icon">✅</div>
-      <p>Tất cả task ngày này đã tồn tại hôm nay.</p>
-    </div>`;
-  } else {
-    listEl.innerHTML = newOnes.map(t => `
-      <div class="clone-preview-item">
-        <span class="ci-proj">${escHTML(t.project)}</span>
-        <span class="ci-name">${escHTML(t.task)}</span>
-        ${t.priority !== 'Medium' ? `<span class="priority-dot ${priorityClass(t.priority)}" title="${t.priority}" style="flex-shrink:0;width:8px;height:8px;border-radius:50%;"></span>` : ''}
-        <span style="font-size:10px;color:var(--text-muted);white-space:nowrap;font-family:'JetBrains Mono',monospace;">→ To-do</span>
-      </div>`).join('');
-  }
-
-  // Store pending clone data on state for confirmClone()
-  state.pendingClone = { sourceDate, tasks: newOnes };
-
+  renderCloneList();
   openModal('clone-modal');
 }
 
+function renderCloneList() {
+  const listEl = document.getElementById('clone-preview-list');
+  const tasks  = state.pendingClone.tasks;
+
+  listEl.innerHTML = tasks.map((t, i) => `
+    <label class="clone-preview-item" style="cursor:pointer;"
+      onmouseenter="this.style.background='var(--bg4)'"
+      onmouseleave="this.style.background='var(--bg3)'">
+      <input type="checkbox" class="clone-cb" data-idx="${i}"
+        ${t._isDuplicate ? '' : 'checked'}
+        onchange="updateCloneCount()"
+        style="width:15px;height:15px;accent-color:var(--purple);cursor:pointer;flex-shrink:0;" />
+      <span class="ci-proj">${escHTML(t.project)}</span>
+      <span class="ci-name" style="${t._isDuplicate ? 'opacity:.5;text-decoration:line-through;' : ''}">${escHTML(t.task)}</span>
+      ${t._isDuplicate
+        ? `<span style="font-size:10px;color:var(--orange);white-space:nowrap;font-family:'JetBrains Mono',monospace;">⚠️ duplicate</span>`
+        : `<span class="status-badge ${statusClass(t.status)}" style="font-size:10px;padding:2px 7px;">${t.status}</span>`
+      }
+    </label>`).join('');
+
+  updateCloneCount();
+}
+
+function updateCloneCount() {
+  const checked = document.querySelectorAll('.clone-cb:checked').length;
+  const total   = document.querySelectorAll('.clone-cb').length;
+  document.getElementById('clone-selected-count').textContent =
+    `${checked} / ${total} task được chọn`;
+}
+
+function cloneSelectAll(val) {
+  document.querySelectorAll('.clone-cb').forEach(cb => { cb.checked = val; });
+  updateCloneCount();
+}
+
 function confirmClone() {
-  if (!state.pendingClone || !state.pendingClone.tasks.length) {
-    closeModal('clone-modal');
-    return;
+  if (!state.pendingClone) { closeModal('clone-modal'); return; }
+
+  const checkedIdxs = [...document.querySelectorAll('.clone-cb:checked')]
+    .map(cb => parseInt(cb.dataset.idx));
+
+  if (!checkedIdxs.length) {
+    toast('Chưa chọn task nào để clone!', 'error'); return;
   }
 
-  const today = todayISO();
-  const cloned = state.pendingClone.tasks.map(t => ({
-    ...t,
-    id        : uuid(),
-    date      : today,
-    status    : 'To-do',
-    createdAt : Date.now(),
-    updatedAt : Date.now(),
-  }));
+  const { targetDate, tasks } = state.pendingClone;
+  const cloned = checkedIdxs.map(i => {
+    const t = tasks[i];
+    return {
+      ...t,
+      id          : uuid(),
+      date        : targetDate,
+      status      : 'To-do',
+      _isDuplicate: undefined,
+      createdAt   : Date.now(),
+      updatedAt   : Date.now(),
+    };
+  });
+
+  // Clean _isDuplicate flag before saving
+  cloned.forEach(t => delete t._isDuplicate);
 
   state.tasks.push(...cloned);
   saveState();
   state.pendingClone = null;
-
   closeModal('clone-modal');
   updateEODBadge();
 
-  // Navigate to Daily Board of today to see cloned tasks
-  state.currentDate = today;
-  document.getElementById('sidebar-date').value = today;
+  // Navigate to target date's Daily Board
+  state.currentDate = targetDate;
+  document.getElementById('sidebar-date').value = targetDate;
+  _celebAlreadyShown = '';
   navTo('daily');
 
-  toast(`✅ Đã clone ${cloned.length} task sang hôm nay!`, 'success');
+  toast(`✅ Đã clone ${cloned.length} task sang ${fmtDate(targetDate)}!`, 'success');
 }
 
 /* ══════════════════════════════════════════════════════════════
