@@ -878,6 +878,177 @@
   .page { display: none; }
   .page.active { display: block; }
 
+  /* ── WEEKLY SUMMARY ── */
+  .weekly-picker-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 14px 18px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--blue);
+  }
+  .weekly-picker-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+  .weekly-picker-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .weekly-range-display {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 5px 14px;
+    white-space: nowrap;
+    min-width: 200px;
+    text-align: center;
+  }
+  /* Summary top stats */
+  .weekly-summary-stats {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .weekly-stat-card {
+    flex: 1;
+    min-width: 110px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 18px;
+    text-align: center;
+  }
+  .weekly-stat-card .wsn { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; line-height: 1; }
+  .weekly-stat-card .wsl { font-size: 11px; color: var(--text-muted); margin-top: 5px; text-transform: uppercase; letter-spacing: .8px; }
+  /* Day columns */
+  .weekly-day-row {
+    margin-bottom: 6px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .weekly-day-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+  }
+  .weekly-day-header:hover { background: var(--bg3); }
+  .weekly-day-name {
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--amber);
+    min-width: 160px;
+  }
+  .weekly-day-meta { font-size: 12px; color: var(--text-muted); }
+  .weekly-day-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-left: auto; }
+  .weekly-day-chip {
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .weekly-day-collapse-icon { font-size: 11px; color: var(--text-muted); margin-left: 4px; }
+  .weekly-day-body { padding: 0 16px 12px; }
+  /* Project block inside day body */
+  .weekly-project-block { margin-bottom: 14px; }
+  .weekly-project-block:last-child { margin-bottom: 0; }
+  .weekly-project-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .weekly-project-name {
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--amber);
+    background: rgba(240,165,0,.1);
+    border: 1px solid rgba(240,165,0,.2);
+    border-radius: 6px;
+    padding: 2px 10px;
+  }
+  .weekly-task-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: var(--radius);
+    transition: background .12s;
+    cursor: pointer;
+  }
+  .weekly-task-row:hover { background: var(--bg3); }
+  .weekly-task-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
+  .weekly-task-detail {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+  /* Project summary cards (bottom) */
+  .weekly-project-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .weekly-proj-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .weekly-proj-card-name {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--amber);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .weekly-proj-stat-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .weekly-proj-stat-row .wpr-label { color: var(--text-muted); }
+  .weekly-proj-stat-row .wpr-val { font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .weekly-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 24px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .weekly-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+  .weekly-empty { text-align:center; padding:16px; color:var(--text-muted); font-size:13px; }
+
   /* Overdue highlight */
   .overdue td:first-child { border-left: 3px solid var(--red); }
 
@@ -913,6 +1084,9 @@
         <div class="nav-item" id="nav-eod" data-page="eod" onclick="navTo('eod')">
           <span class="nav-icon">🌆</span> End of Day
           <span class="eod-badge" id="eod-count" style="display:none">0</span>
+        </div>
+        <div class="nav-item" data-page="weekly" onclick="navTo('weekly')">
+          <span class="nav-icon">📊</span> Weekly Summary
         </div>
       </div>
       <div class="nav-section">
@@ -1018,6 +1192,26 @@
       <!-- ── PAGE: END OF DAY ── -->
       <div class="page" id="page-eod">
         <div id="eod-content"></div>
+      </div>
+
+      <!-- ── PAGE: WEEKLY SUMMARY ── -->
+      <div class="page" id="page-weekly">
+        <!-- Week picker bar -->
+        <div class="weekly-picker-bar">
+          <span class="weekly-picker-label">📊 Weekly Summary</span>
+          <div class="weekly-picker-controls">
+            <button class="btn btn-sm" onclick="shiftWeek(-1)" title="Tuần trước">‹ Prev</button>
+            <div class="weekly-range-display" id="weekly-range-display">—</div>
+            <button class="btn btn-sm" onclick="shiftWeek(1)" title="Tuần sau">Next ›</button>
+            <button class="btn btn-sm" onclick="jumpToCurrentWeek()" title="Tuần hiện tại">Today's Week</button>
+          </div>
+          <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;">
+            <button class="btn btn-sm" onclick="exportWeeklySummaryTXT()">📄 Export TXT</button>
+            <button class="btn btn-sm" onclick="exportWeeklySummaryHTML()">🌐 Export HTML</button>
+          </div>
+        </div>
+        <!-- Summary content -->
+        <div id="weekly-content"></div>
       </div>
 
       <!-- ── PAGE: SETTINGS ── -->
@@ -1485,6 +1679,7 @@ function navTo(page) {
     all: '📁 All Tasks',
     projects: '🗂️ Projects',
     eod: '🌆 End of Day Check',
+    weekly: '📊 Weekly Summary',
     settings: '⚙️ Import / Export',
   };
   document.getElementById('topbar-title').textContent = titles[page] || page;
@@ -1493,6 +1688,7 @@ function navTo(page) {
   if (page === 'all')      renderAll();
   if (page === 'projects') renderProjects();
   if (page === 'eod')      renderEOD();
+  if (page === 'weekly')   renderWeeklySummary();
 }
 
 function onDateChange(val) {
@@ -2456,7 +2652,7 @@ function clearAllData() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   CELEBRATION
+   KEYBOARD SHORTCUTS
 ══════════════════════════════════════════════════════════════ */
 let _celebAnimId = null;
 let _celebAlreadyShown = '';   // track date so it only fires once per day session
@@ -2535,8 +2731,381 @@ function closeCelebration() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   KEYBOARD SHORTCUTS
+   WEEKLY SUMMARY
 ══════════════════════════════════════════════════════════════ */
+
+// currentWeekMonday stored as ISO string
+let _weekMonday = getThisWeekMonday();
+
+function getThisWeekMonday() {
+  const d = new Date();
+  const day = d.getDay(); // 0=Sun,1=Mon...
+  const diff = day === 0 ? -6 : 1 - day; // go back to Monday
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().split('T')[0];
+}
+
+function addDays(iso, n) {
+  const d = new Date(iso + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+}
+
+function getWeekDays(monday) {
+  // Mon=0 … Fri=4
+  return Array.from({ length: 5 }, (_, i) => addDays(monday, i));
+}
+
+function shiftWeek(dir) {
+  _weekMonday = addDays(_weekMonday, dir * 7);
+  renderWeeklySummary();
+}
+
+function jumpToCurrentWeek() {
+  _weekMonday = getThisWeekMonday();
+  renderWeeklySummary();
+}
+
+function renderWeeklySummary() {
+  const days    = getWeekDays(_weekMonday);
+  const friday  = days[4];
+  const monday  = days[0];
+
+  // Update range display
+  document.getElementById('weekly-range-display').textContent =
+    `${fmtDate(monday)}  –  ${fmtDate(friday)}`;
+
+  // All tasks in this week
+  const weekTasks = state.tasks.filter(t => t.date >= monday && t.date <= friday);
+
+  // ── Top stats ──
+  const sc = statsFor(weekTasks);
+  const totalDays = days.filter(d => state.tasks.some(t => t.date === d)).length;
+  const projects  = [...new Set(weekTasks.map(t => t.project))].sort();
+
+  const statsHtml = `
+    <div class="weekly-summary-stats">
+      <div class="weekly-stat-card" style="border-top:3px solid var(--text-dim)">
+        <div class="wsn" style="color:var(--text)">${weekTasks.length}</div>
+        <div class="wsl">Total Tasks</div>
+      </div>
+      <div class="weekly-stat-card" style="border-top:3px solid var(--green)">
+        <div class="wsn" style="color:var(--green)">${sc.Done}</div>
+        <div class="wsl">Done</div>
+      </div>
+      <div class="weekly-stat-card" style="border-top:3px solid var(--blue)">
+        <div class="wsn" style="color:var(--blue)">${sc['In Progress']}</div>
+        <div class="wsl">In Progress</div>
+      </div>
+      <div class="weekly-stat-card" style="border-top:3px solid var(--orange)">
+        <div class="wsn" style="color:var(--orange)">${sc['In Review'] + sc.Delayed}</div>
+        <div class="wsl">Review / Delayed</div>
+      </div>
+      <div class="weekly-stat-card" style="border-top:3px solid var(--red)">
+        <div class="wsn" style="color:var(--red)">${sc.Blocked}</div>
+        <div class="wsl">Blocked</div>
+      </div>
+      <div class="weekly-stat-card" style="border-top:3px solid var(--purple)">
+        <div class="wsn" style="color:var(--purple)">${projects.length}</div>
+        <div class="wsl">Projects</div>
+      </div>
+    </div>`;
+
+  // ── Day-by-day breakdown ──
+  const VIDAY = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6'];
+  let daysHtml = `<div class="weekly-section-title">📅 Chi tiết theo ngày</div>`;
+
+  days.forEach((day, di) => {
+    const dayTasks = weekTasks.filter(t => t.date === day);
+    const dc = statsFor(dayTasks);
+    const isToday = day === todayISO();
+    const hasTasks = dayTasks.length > 0;
+
+    const chipHtml = (num, color, label) => num > 0
+      ? `<span class="weekly-day-chip" style="background:${color}22;color:${color};border:1px solid ${color}44;">${num} ${label}</span>`
+      : '';
+
+    daysHtml += `
+      <div class="weekly-day-row" id="wday-${day}">
+        <div class="weekly-day-header" onclick="toggleWeekDay('${day}')">
+          <span class="weekly-day-name"
+            style="${isToday ? 'color:var(--amber);' : ''}">
+            ${VIDAY[di]} — ${fmtDate(day)}${isToday ? ' 🔵' : ''}
+          </span>
+          <span class="weekly-day-meta">${hasTasks ? dayTasks.length + ' tasks' : 'Không có task'}</span>
+          <div class="weekly-day-chips">
+            ${chipHtml(dc.Done, 'var(--green)', 'Done')}
+            ${chipHtml(dc['In Progress'], 'var(--blue)', 'IP')}
+            ${chipHtml(dc['In Review'], 'var(--orange)', 'Review')}
+            ${chipHtml(dc.Delayed, 'var(--orange)', 'Delayed')}
+            ${chipHtml(dc.Blocked, 'var(--red)', 'Blocked')}
+            ${chipHtml(dc['To-do'], 'var(--slate)', 'Todo')}
+          </div>
+          <span class="weekly-day-collapse-icon" id="wday-icon-${day}">▾</span>
+        </div>
+        <div class="weekly-day-body" id="wday-body-${day}" style="${hasTasks ? '' : 'display:none'}">
+          ${hasTasks ? renderDayBody(dayTasks) : ''}
+        </div>
+      </div>`;
+  });
+
+  // ── Per-project summary cards ──
+  let projCardsHtml = `<div class="weekly-section-title">🗂️ Tổng hợp theo Project</div>
+    <div class="weekly-project-summary">`;
+
+  projects.forEach(proj => {
+    const pt    = weekTasks.filter(t => t.project === proj);
+    const pc    = statsFor(pt);
+    const doneP = pt.filter(t => t.status === 'Done');
+    const ipP   = pt.filter(t => t.status === 'In Progress');
+    const blkP  = pt.filter(t => t.status === 'Blocked');
+    const delP  = pt.filter(t => t.status === 'Delayed');
+
+    projCardsHtml += `
+      <div class="weekly-proj-card">
+        <div class="weekly-proj-card-name">${escHTML(proj)}</div>
+        <div class="weekly-proj-stat-row">
+          <span class="wpr-label">Total</span>
+          <span class="wpr-val">${pt.length}</span>
+        </div>
+        <div class="weekly-proj-stat-row">
+          <span class="wpr-label" style="color:var(--green)">✅ Done</span>
+          <span class="wpr-val" style="color:var(--green)">${pc.Done}</span>
+        </div>
+        <div class="weekly-proj-stat-row">
+          <span class="wpr-label" style="color:var(--blue)">🔵 In Progress</span>
+          <span class="wpr-val" style="color:var(--blue)">${pc['In Progress']}</span>
+        </div>
+        ${pc['In Review'] ? `<div class="weekly-proj-stat-row">
+          <span class="wpr-label" style="color:var(--orange)">🔄 In Review</span>
+          <span class="wpr-val" style="color:var(--orange)">${pc['In Review']}</span>
+        </div>` : ''}
+        ${pc.Delayed ? `<div class="weekly-proj-stat-row">
+          <span class="wpr-label" style="color:var(--orange)">⏱ Delayed</span>
+          <span class="wpr-val" style="color:var(--orange)">${pc.Delayed}</span>
+        </div>` : ''}
+        ${pc.Blocked ? `<div class="weekly-proj-stat-row">
+          <span class="wpr-label" style="color:var(--red)">🚫 Blocked</span>
+          <span class="wpr-val" style="color:var(--red)">${pc.Blocked}</span>
+        </div>` : ''}
+        ${doneP.length ? `
+          <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted);">
+            <div style="font-weight:700;margin-bottom:4px;color:var(--green);">Completed:</div>
+            ${doneP.map(t => `<div style="padding:2px 0;">· ${escHTML(t.task)}</div>`).join('')}
+          </div>` : ''}
+        ${ipP.length ? `
+          <div style="margin-top:8px;font-size:11px;color:var(--text-muted);">
+            <div style="font-weight:700;margin-bottom:4px;color:var(--blue);">In Progress:</div>
+            ${ipP.map(t => `<div style="padding:2px 0;">· ${escHTML(t.task)}</div>`).join('')}
+          </div>` : ''}
+        ${blkP.length ? `
+          <div style="margin-top:8px;font-size:11px;color:var(--text-muted);">
+            <div style="font-weight:700;margin-bottom:4px;color:var(--red);">Blocked:</div>
+            ${blkP.map(t => `<div style="padding:2px 0;">· ${escHTML(t.task)}</div>`).join('')}
+          </div>` : ''}
+      </div>`;
+  });
+
+  projCardsHtml += `</div>`;
+
+  if (!weekTasks.length) {
+    projCardsHtml = `<div class="empty-state" style="padding:40px 0;">
+      <div class="icon">📊</div>
+      <p>Không có task nào trong tuần này</p>
+      <small>Chọn tuần khác hoặc thêm task mới</small>
+    </div>`;
+  }
+
+  document.getElementById('weekly-content').innerHTML =
+    statsHtml + daysHtml + projCardsHtml;
+}
+
+function renderDayBody(tasks) {
+  // Group by project
+  const byProject = {};
+  tasks.forEach(t => { (byProject[t.project] = byProject[t.project] || []).push(t); });
+  const prio = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+  let html = '';
+  for (const proj of Object.keys(byProject).sort()) {
+    const ptasks = byProject[proj].sort((a, b) => (prio[a.priority]||2)-(prio[b.priority]||2));
+    html += `<div class="weekly-project-block">
+      <div class="weekly-project-title">
+        <span class="weekly-project-name">${escHTML(proj)}</span>
+        <span style="font-size:11px;color:var(--text-muted);">${ptasks.length} task${ptasks.length > 1 ? 's' : ''}</span>
+      </div>`;
+    ptasks.forEach(t => {
+      html += `<div class="weekly-task-row" onclick="openEditModal('${t.id}')">
+        <span class="status-badge ${statusClass(t.status)}" style="font-size:10px;padding:2px 8px;white-space:nowrap;flex-shrink:0;">${t.status}</span>
+        <div style="flex:1;min-width:0;">
+          <div class="weekly-task-name">${escHTML(t.task)}</div>
+          ${t.detail ? `<div class="weekly-task-detail">${escHTML(t.detail)}</div>` : ''}
+        </div>
+        ${t.owner ? `<span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">👤 ${escHTML(t.owner)}</span>` : ''}
+        ${t.priority !== 'Medium' ? `<span class="priority-dot ${priorityClass(t.priority)}" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></span>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  return html;
+}
+
+function toggleWeekDay(day) {
+  const body = document.getElementById('wday-body-' + day);
+  const icon = document.getElementById('wday-icon-' + day);
+  if (!body) return;
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  icon.textContent = isHidden ? '▾' : '▸';
+}
+
+/* ── Weekly export: TXT ── */
+function exportWeeklySummaryTXT() {
+  const days   = getWeekDays(_weekMonday);
+  const friday = days[4];
+  const monday = days[0];
+  const weekTasks = state.tasks.filter(t => t.date >= monday && t.date <= friday);
+  const VIDAY = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6'];
+  const sc = statsFor(weekTasks);
+
+  let lines = [];
+  lines.push(`════════════════════════════════════════`);
+  lines.push(`WEEKLY SUMMARY: ${fmtDate(monday)} – ${fmtDate(friday)}`);
+  lines.push(`════════════════════════════════════════`);
+  lines.push(`Total: ${weekTasks.length}  |  Done: ${sc.Done}  |  In Progress: ${sc['In Progress']}  |  Blocked: ${sc.Blocked}  |  Delayed: ${sc.Delayed}`);
+  lines.push('');
+
+  days.forEach((day, di) => {
+    const dayTasks = weekTasks.filter(t => t.date === day);
+    lines.push(`────────────────────────────────────────`);
+    lines.push(`${VIDAY[di]} – ${fmtDate(day)}  (${dayTasks.length} tasks)`);
+    lines.push(`────────────────────────────────────────`);
+    if (!dayTasks.length) { lines.push('  (không có task)'); lines.push(''); return; }
+
+    const byProject = {};
+    dayTasks.forEach(t => { (byProject[t.project] = byProject[t.project] || []).push(t); });
+    for (const proj of Object.keys(byProject).sort()) {
+      lines.push(`  [${proj}]`);
+      byProject[proj].forEach(t => {
+        lines.push(`    • ${t.task} — ${t.status}${t.owner ? ' [' + t.owner + ']' : ''}`);
+        if (t.detail) t.detail.split('\n').forEach(l => lines.push(`      ${l}`));
+      });
+    }
+    lines.push('');
+  });
+
+  lines.push(`════════════════════════════════════════`);
+  lines.push(`PROJECT SUMMARY`);
+  lines.push(`════════════════════════════════════════`);
+  const projects = [...new Set(weekTasks.map(t => t.project))].sort();
+  projects.forEach(proj => {
+    const pt = weekTasks.filter(t => t.project === proj);
+    const pc = statsFor(pt);
+    lines.push(`[${proj}]  Total: ${pt.length}  Done: ${pc.Done}  IP: ${pc['In Progress']}  Delayed: ${pc.Delayed}  Blocked: ${pc.Blocked}`);
+    pt.filter(t => t.status === 'Done').forEach(t => lines.push(`  ✅ ${t.task}`));
+    pt.filter(t => t.status === 'In Progress').forEach(t => lines.push(`  🔵 ${t.task}`));
+    pt.filter(t => t.status === 'Blocked').forEach(t => lines.push(`  🚫 ${t.task}`));
+    lines.push('');
+  });
+
+  download(`weekly-summary-${monday}.txt`, lines.join('\n'), 'text/plain');
+  toast('Exported Weekly TXT ✅', 'success');
+}
+
+/* ── Weekly export: HTML (self-contained) ── */
+function exportWeeklySummaryHTML() {
+  const days   = getWeekDays(_weekMonday);
+  const friday = days[4];
+  const monday = days[0];
+  const weekTasks = state.tasks.filter(t => t.date >= monday && t.date <= friday);
+  const VIDAY = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6'];
+  const sc = statsFor(weekTasks);
+  const projects = [...new Set(weekTasks.map(t => t.project))].sort();
+
+  const STATUS_COLORS = {
+    'Done':'#2ea043','In Progress':'#388bfd','In Review':'#d29922',
+    'To-do':'#4d5869','Delayed':'#d29922','Blocked':'#f85149',
+    'Canceled':'#f85149','Not Executed':'#bc8cff',
+  };
+
+  let html = `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"/>
+  <title>Weekly Summary ${fmtDate(monday)} – ${fmtDate(friday)}</title>
+  <style>
+    body{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+    h1{color:#f0a500;font-size:22px;border-bottom:1px solid #2a3347;padding-bottom:12px;}
+    .meta{color:#8b949e;font-size:13px;margin-bottom:24px;}
+    .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+    .sc{background:#161b22;border:1px solid #2a3347;border-radius:8px;padding:12px 18px;text-align:center;min-width:90px;}
+    .scn{font-size:26px;font-weight:800;font-family:monospace;}
+    .scl{font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:.8px;}
+    .day{margin-bottom:20px;background:#161b22;border:1px solid #2a3347;border-radius:8px;overflow:hidden;}
+    .dh{padding:12px 18px;background:#1c2230;font-size:14px;font-weight:700;color:#f0a500;border-bottom:1px solid #2a3347;}
+    .db{padding:12px 18px;}
+    .pblock{margin-bottom:14px;}
+    .ptitle{font-size:12px;font-weight:700;font-family:monospace;color:#f0a500;border-bottom:1px solid #2a3347;padding-bottom:6px;margin-bottom:8px;}
+    .trow{display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid #2a333720;}
+    .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+    .tname{font-size:13px;font-weight:500;flex:1;}
+    .tdetail{font-size:11px;color:#8b949e;margin-top:3px;white-space:pre-wrap;}
+    .section-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#8b949e;margin:28px 0 10px;font-weight:700;}
+    .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+    .pcard{background:#161b22;border:1px solid #2a3347;border-radius:8px;padding:14px;}
+    .pcname{font-size:13px;font-weight:700;font-family:monospace;color:#f0a500;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #2a3347;}
+    .pcrow{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;}
+    .empty{color:#4d5869;font-style:italic;}
+  </style></head><body>
+  <h1>📊 Weekly Summary</h1>
+  <div class="meta">Tuần: ${fmtDate(monday)} – ${fmtDate(friday)} &nbsp;|&nbsp; Exported: ${new Date().toLocaleString('vi-VN')}</div>
+  <div class="stats">
+    <div class="sc"><div class="scn" style="color:#e6edf3">${weekTasks.length}</div><div class="scl">Total</div></div>
+    <div class="sc"><div class="scn" style="color:#2ea043">${sc.Done}</div><div class="scl">Done</div></div>
+    <div class="sc"><div class="scn" style="color:#388bfd">${sc['In Progress']}</div><div class="scl">In Progress</div></div>
+    <div class="sc"><div class="scn" style="color:#d29922">${sc['In Review']}</div><div class="scl">In Review</div></div>
+    <div class="sc"><div class="scn" style="color:#d29922">${sc.Delayed}</div><div class="scl">Delayed</div></div>
+    <div class="sc"><div class="scn" style="color:#f85149">${sc.Blocked}</div><div class="scl">Blocked</div></div>
+  </div>
+  <div class="section-title">📅 Chi tiết theo ngày</div>`;
+
+  days.forEach((day, di) => {
+    const dt = weekTasks.filter(t => t.date === day);
+    const byProject = {};
+    dt.forEach(t => { (byProject[t.project] = byProject[t.project] || []).push(t); });
+    html += `<div class="day"><div class="dh">${VIDAY[di]} — ${fmtDate(day)} &nbsp;<span style="font-weight:400;color:#8b949e;font-size:12px;">(${dt.length} tasks)</span></div><div class="db">`;
+    if (!dt.length) { html += `<span class="empty">Không có task</span>`; }
+    else Object.keys(byProject).sort().forEach(proj => {
+      html += `<div class="pblock"><div class="ptitle">${proj}</div>`;
+      byProject[proj].forEach(t => {
+        const c = STATUS_COLORS[t.status] || '#4d5869';
+        html += `<div class="trow">
+          <span class="badge" style="background:${c}22;color:${c};border:1px solid ${c}44;">${t.status}</span>
+          <div class="tname">${t.task}${t.owner ? ` <span style="font-size:11px;color:#8b949e;">👤${t.owner}</span>` : ''}
+            ${t.detail ? `<div class="tdetail">${t.detail.replace(/</g,'&lt;')}</div>` : ''}
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  html += `<div class="section-title">🗂️ Tổng hợp theo Project</div><div class="proj-grid">`;
+  projects.forEach(proj => {
+    const pt = weekTasks.filter(t => t.project === proj);
+    const pc = statsFor(pt);
+    html += `<div class="pcard"><div class="pcname">${proj}</div>
+      <div class="pcrow"><span>Total</span><strong>${pt.length}</strong></div>
+      <div class="pcrow" style="color:#2ea043"><span>Done</span><strong>${pc.Done}</strong></div>
+      <div class="pcrow" style="color:#388bfd"><span>In Progress</span><strong>${pc['In Progress']}</strong></div>
+      ${pc['In Review'] ? `<div class="pcrow" style="color:#d29922"><span>In Review</span><strong>${pc['In Review']}</strong></div>` : ''}
+      ${pc.Delayed     ? `<div class="pcrow" style="color:#d29922"><span>Delayed</span><strong>${pc.Delayed}</strong></div>` : ''}
+      ${pc.Blocked     ? `<div class="pcrow" style="color:#f85149"><span>Blocked</span><strong>${pc.Blocked}</strong></div>` : ''}
+      ${pt.filter(t=>t.status==='Done').length ? `<div style="margin-top:8px;font-size:11px;color:#2ea043;">${pt.filter(t=>t.status==='Done').map(t=>`✅ ${t.task}`).join('<br/>')}</div>` : ''}
+    </div>`;
+  });
+
+  html += `</div></body></html>`;
+  download(`weekly-summary-${monday}.html`, html, 'text/html');
+  toast('Exported Weekly HTML ✅', 'success');
+}
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
