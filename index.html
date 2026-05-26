@@ -1501,7 +1501,11 @@ let state = {
 };
 
 function todayISO() {
-  return new Date().toISOString().split('T')[0];
+  const d = new Date();
+  const y  = d.getFullYear();
+  const m  = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
 }
 
 function loadState() {
@@ -2738,17 +2742,31 @@ function closeCelebration() {
 let _weekMonday = getThisWeekMonday();
 
 function getThisWeekMonday() {
-  const d = new Date();
-  const day = d.getDay(); // 0=Sun,1=Mon...
-  const diff = day === 0 ? -6 : 1 - day; // go back to Monday
+  const d   = new Date();
+  const day = d.getDay();                    // local: 0=Sun 1=Mon … 6=Sat
+  const diff = day === 0 ? -6 : 1 - day;    // how many days back to Monday
   d.setDate(d.getDate() + diff);
-  return d.toISOString().split('T')[0];
+  const y  = d.getFullYear();
+  const m  = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
+
+// Get weekday name directly from the ISO date string — never relies on array index
+function weekdayName(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const dow = new Date(y, m - 1, d).getDay(); // local, no UTC shift
+  return ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'][dow];
 }
 
 function addDays(iso, n) {
-  const d = new Date(iso + 'T00:00:00');
-  d.setDate(d.getDate() + n);
-  return d.toISOString().split('T')[0];
+  const [y, mo, d] = iso.split('-').map(Number);
+  const date = new Date(y, mo - 1, d);      // local midnight — no UTC shift
+  date.setDate(date.getDate() + n);
+  const yy  = date.getFullYear();
+  const mm  = String(date.getMonth() + 1).padStart(2, '0');
+  const dd  = String(date.getDate()).padStart(2, '0');
+  return `${yy}-${mm}-${dd}`;
 }
 
 function getWeekDays(monday) {
@@ -2812,10 +2830,9 @@ function renderWeeklySummary() {
     </div>`;
 
   // ── Day-by-day breakdown ──
-  const VIDAY = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6'];
   let daysHtml = `<div class="weekly-section-title">📅 Chi tiết theo ngày</div>`;
 
-  days.forEach((day, di) => {
+  days.forEach((day) => {
     const dayTasks = weekTasks.filter(t => t.date === day);
     const dc = statsFor(dayTasks);
     const isToday = day === todayISO();
@@ -2830,7 +2847,7 @@ function renderWeeklySummary() {
         <div class="weekly-day-header" onclick="toggleWeekDay('${day}')">
           <span class="weekly-day-name"
             style="${isToday ? 'color:var(--amber);' : ''}">
-            ${VIDAY[di]} — ${fmtDate(day)}${isToday ? ' 🔵' : ''}
+            ${weekdayName(day)} — ${fmtDate(day)}${isToday ? ' 🔵' : ''}
           </span>
           <span class="weekly-day-meta">${hasTasks ? dayTasks.length + ' tasks' : 'Không có task'}</span>
           <div class="weekly-day-chips">
@@ -2964,7 +2981,6 @@ function exportWeeklySummaryTXT() {
   const friday = days[4];
   const monday = days[0];
   const weekTasks = state.tasks.filter(t => t.date >= monday && t.date <= friday);
-  const VIDAY = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6'];
   const sc = statsFor(weekTasks);
 
   let lines = [];
@@ -2974,10 +2990,10 @@ function exportWeeklySummaryTXT() {
   lines.push(`Total: ${weekTasks.length}  |  Done: ${sc.Done}  |  In Progress: ${sc['In Progress']}  |  Blocked: ${sc.Blocked}  |  Delayed: ${sc.Delayed}`);
   lines.push('');
 
-  days.forEach((day, di) => {
+  days.forEach((day) => {
     const dayTasks = weekTasks.filter(t => t.date === day);
     lines.push(`────────────────────────────────────────`);
-    lines.push(`${VIDAY[di]} – ${fmtDate(day)}  (${dayTasks.length} tasks)`);
+    lines.push(`${weekdayName(day)} – ${fmtDate(day)}  (${dayTasks.length} tasks)`);
     lines.push(`────────────────────────────────────────`);
     if (!dayTasks.length) { lines.push('  (không có task)'); lines.push(''); return; }
 
@@ -3017,7 +3033,6 @@ function exportWeeklySummaryHTML() {
   const friday = days[4];
   const monday = days[0];
   const weekTasks = state.tasks.filter(t => t.date >= monday && t.date <= friday);
-  const VIDAY = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6'];
   const sc = statsFor(weekTasks);
   const projects = [...new Set(weekTasks.map(t => t.project))].sort();
 
@@ -3065,11 +3080,11 @@ function exportWeeklySummaryHTML() {
   </div>
   <div class="section-title">📅 Chi tiết theo ngày</div>`;
 
-  days.forEach((day, di) => {
+  days.forEach((day) => {
     const dt = weekTasks.filter(t => t.date === day);
     const byProject = {};
     dt.forEach(t => { (byProject[t.project] = byProject[t.project] || []).push(t); });
-    html += `<div class="day"><div class="dh">${VIDAY[di]} — ${fmtDate(day)} &nbsp;<span style="font-weight:400;color:#8b949e;font-size:12px;">(${dt.length} tasks)</span></div><div class="db">`;
+    html += `<div class="day"><div class="dh">${weekdayName(day)} — ${fmtDate(day)} &nbsp;<span style="font-weight:400;color:#8b949e;font-size:12px;">(${dt.length} tasks)</span></div><div class="db">`;
     if (!dt.length) { html += `<span class="empty">Không có task</span>`; }
     else Object.keys(byProject).sort().forEach(proj => {
       html += `<div class="pblock"><div class="ptitle">${proj}</div>`;
