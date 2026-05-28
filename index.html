@@ -1037,45 +1037,60 @@
 
   /* ── NEW: Day body task cards ── */
   .wdb-project-block {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     overflow: hidden;
+    border-left-width: 3px !important;
   }
   .wdb-project-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
     padding: 10px 14px;
-    background: rgba(240,165,0,.06);
-    border-bottom: 1px solid rgba(240,165,0,.15);
+    background: var(--bg3);
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
   }
+  .wdb-project-header:hover { background: var(--bg4); }
+  .wdb-proj-left  { display: flex; align-items: center; gap: 10px; }
+  .wdb-proj-right { display: flex; align-items: center; gap: 12px; }
   .wdb-proj-pill {
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 800;
     font-family: 'JetBrains Mono', monospace;
-    color: var(--amber);
-    background: rgba(240,165,0,.12);
-    border: 1px solid rgba(240,165,0,.25);
     border-radius: 6px;
-    padding: 2px 10px;
+    padding: 3px 12px;
     white-space: nowrap;
+    letter-spacing: .4px;
   }
-  .wdb-progress-wrap { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .wdb-proj-task-count {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    opacity: .8;
+  }
+  .wdb-proj-toggle {
+    font-size: 12px;
+    color: var(--text-muted);
+    min-width: 12px;
+    text-align: center;
+  }
+  .wdb-progress-wrap { display: flex; align-items: center; gap: 8px; }
   .wdb-progress-bar {
-    width: 80px; height: 4px;
+    width: 64px; height: 4px;
     background: var(--bg4);
-    border-radius: 2px;
-    overflow: hidden;
+    border-radius: 2px; overflow: hidden;
   }
-  .wdb-progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width .4s ease; }
-  .wdb-progress-label { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
-  .wdb-task-list { padding: 6px 0; }
+  .wdb-progress-fill { height: 100%; border-radius: 2px; transition: width .4s ease; }
+  .wdb-progress-label { font-size: 11px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; font-weight: 700; }
+  .wdb-task-list { background: var(--bg2); }
   .wdb-task-card {
-    border-bottom: 1px solid var(--border);
-    transition: background .12s;
+    border-top: 1px solid var(--border);
+    transition: background .1s;
   }
-  .wdb-task-card:last-child { border-bottom: none; }
+  .wdb-task-card:hover { background: var(--bg3); }
   .wdb-task-main {
     display: flex;
     align-items: center;
@@ -1083,63 +1098,48 @@
     padding: 9px 14px;
     cursor: pointer;
   }
-  .wdb-task-main:hover { background: var(--bg3); }
   .wdb-task-num {
-    width: 20px;
-    height: 20px;
+    width: 20px; height: 20px;
     border-radius: 50%;
-    background: var(--bg4);
-    border: 1px solid var(--border2);
-    font-size: 10px;
-    font-weight: 700;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    font-size: 10px; font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
   .wdb-task-info { flex: 1; min-width: 0; }
   .wdb-task-name { font-size: 13px; font-weight: 500; color: var(--text); display: block; }
-  .wdb-task-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 3px; }
+  .wdb-task-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 3px; }
   .wdb-meta-chip {
-    font-size: 10px;
-    color: var(--text-muted);
-    background: var(--bg4);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 1px 7px;
+    font-size: 10px; color: var(--text-muted);
+    background: var(--bg4); border: 1px solid var(--border);
+    border-radius: 20px; padding: 1px 7px;
     font-family: 'JetBrains Mono', monospace;
   }
   .wdb-overdue { color: var(--red) !important; border-color: rgba(248,81,73,.4) !important; background: var(--red-bg) !important; }
-  .wdb-task-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-  .wdb-toggle-hint {
-    font-size: 10px;
-    color: var(--purple);
-    font-family: 'JetBrains Mono', monospace;
-    cursor: pointer;
-    white-space: nowrap;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--purple-bg);
-    border: 1px solid rgba(188,140,255,.2);
+  /* Inline notes — always visible, indented under task */
+  .wdb-task-notes {
+    padding: 0 14px 9px 44px;
+    display: flex; flex-direction: column; gap: 3px;
   }
-  .wdb-task-detail {
-    padding: 8px 14px 10px 54px;
-    background: rgba(188,140,255,.04);
-    border-top: 1px dashed rgba(188,140,255,.15);
+  .wdb-note-line {
+    display: flex; align-items: flex-start; gap: 7px;
+    font-size: 11px; color: var(--text-muted); line-height: 1.5;
   }
-  .wdb-detail-list {
-    margin: 0;
-    padding-left: 16px;
-    font-size: 12px;
-    color: var(--text-dim);
-    line-height: 1.7;
+  .wdb-note-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 5px; opacity: .7;
   }
-  .wdb-detail-list li::marker { color: var(--purple); }
 
-  /* ── NEW: Project Summary ── */
-  .wps-list { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+  /* ── NEW: Project Summary grid ── */
+  .wps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+    margin-top: 4px;
+    align-items: start;  /* cards don't stretch to same height */
+  }
   .wps-card {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -1150,85 +1150,51 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 12px 18px;
+    gap: 12px;
+    padding: 12px 16px;
     background: rgba(240,165,0,.05);
     border-bottom: 1px solid rgba(240,165,0,.15);
   }
   .wps-proj-name {
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 14px; font-weight: 800;
     font-family: 'JetBrains Mono', monospace;
     color: var(--amber);
   }
-  .wps-header-right { display: flex; align-items: center; gap: 16px; }
+  .wps-header-right { display: flex; align-items: center; gap: 12px; }
   .wps-progress-wrap { display: flex; align-items: center; gap: 8px; }
-  .wps-progress-bar { width: 100px; height: 5px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+  .wps-progress-bar { width: 80px; height: 5px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
   .wps-progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width .4s; }
   .wps-progress-label { font-size: 11px; color: var(--green); font-family: 'JetBrains Mono', monospace; white-space: nowrap; font-weight: 700; }
   .wps-total { font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
-  .wps-stat-row-wrap { padding: 8px 0; }
+  .wps-stat-row-wrap { padding: 4px 0; }
   .wps-status-group { border-bottom: 1px solid var(--border); }
   .wps-status-group:last-child { border-bottom: none; }
   .wps-status-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 18px;
-    cursor: pointer;
-    transition: background .12s;
-    user-select: none;
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px; cursor: pointer;
+    transition: background .12s; user-select: none;
   }
   .wps-status-header:hover { background: var(--bg3); }
-  .wps-count {
-    font-size: 12px;
-    font-weight: 700;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .wps-toggle-icon {
-    margin-left: auto;
-    font-size: 12px;
-    color: var(--text-muted);
-    transition: transform .15s;
-  }
-  .wps-status-body { padding: 4px 0 8px 0; background: var(--bg3); }
+  .wps-count { font-size: 12px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .wps-toggle-icon { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+  .wps-status-body { background: var(--bg3); padding: 4px 0 6px; }
   .wps-task-item {
-    padding: 7px 24px 7px 36px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background .1s;
-    margin: 2px 8px;
-    border-radius: var(--radius);
+    padding: 6px 16px 6px 28px;
+    cursor: pointer; transition: background .1s;
+    border-radius: 4px; margin: 1px 6px;
   }
   .wps-task-item:hover { background: var(--bg4); }
   .wps-task-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    font-size: 13px; font-weight: 500; color: var(--text);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
   .wps-bullet { font-size: 10px; flex-shrink: 0; }
-  .wps-owner {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 400;
-  }
-  .wps-due {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 400;
-  }
+  .wps-owner { font-size: 11px; color: var(--text-muted); font-weight: 400; }
+  .wps-due { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-weight: 400; }
   .wps-overdue { color: var(--red) !important; }
   .wps-note-list {
-    margin: 4px 0 0 14px;
-    padding-left: 14px;
-    font-size: 11px;
-    color: var(--text-muted);
-    line-height: 1.7;
+    margin: 4px 0 0 4px; padding-left: 14px;
+    font-size: 11px; color: var(--text-muted); line-height: 1.7;
   }
   .wps-note-list li::marker { color: var(--text-muted); }
   .weekly-section-title {
@@ -3055,9 +3021,9 @@ function renderWeeklySummary() {
             ${chipHtml(dc.Blocked, 'var(--red)', 'Blocked')}
             ${chipHtml(dc['To-do'], 'var(--slate)', 'Todo')}
           </div>
-          <span class="weekly-day-collapse-icon" id="wday-icon-${day}">▾</span>
+          <span class="weekly-day-collapse-icon" id="wday-icon-${day}">▸</span>
         </div>
-        <div class="weekly-day-body" id="wday-body-${day}" style="${hasTasks ? '' : 'display:none'}">
+        <div class="weekly-day-body" id="wday-body-${day}" style="display:none">
           ${hasTasks ? renderDayBody(dayTasks) : ''}
         </div>
       </div>`;
@@ -3067,7 +3033,7 @@ function renderWeeklySummary() {
   let projCardsHtml = `<div class="weekly-section-title">🗂️ Tổng hợp theo Project</div>`;
 
   if (projects.length) {
-    projCardsHtml += `<div class="wps-list">`;
+    projCardsHtml += `<div class="wps-grid">`;
     const STATUS_GROUPS = [
       { key: 'Done',         label: '✅ Completed',   color: 'var(--green)',  cls: 's-done' },
       { key: 'In Progress',  label: '🔵 In Progress', color: 'var(--blue)',   cls: 's-inprogress' },
@@ -3105,9 +3071,9 @@ function renderWeeklySummary() {
             <div class="wps-status-header" onclick="toggleWpsGroup('${uid}')">
               <span class="status-badge ${sg.cls}" style="font-size:11px;">${sg.label}</span>
               <span class="wps-count" style="color:${sg.color}">${grpTasks.length}</span>
-              <span class="wps-toggle-icon" id="${uid}-icon">▾</span>
+              <span class="wps-toggle-icon" id="${uid}-icon">▸</span>
             </div>
-            <div class="wps-status-body" id="${uid}-body">`;
+            <div class="wps-status-body" id="${uid}-body" style="display:none">`;
 
         grpTasks.forEach(t => {
           const hasDetail = t.detail && t.detail.trim();
@@ -3134,7 +3100,7 @@ function renderWeeklySummary() {
       projCardsHtml += `</div></div>`;
     });
 
-    projCardsHtml += `</div>`;
+    projCardsHtml += `</div>`; // .wps-grid
   }
 
   if (!weekTasks.length) {
@@ -3153,70 +3119,75 @@ function renderDayBody(tasks) {
   const byProject = {};
   tasks.forEach(t => { (byProject[t.project] = byProject[t.project] || []).push(t); });
   const prio = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+  // Distinct left-border colors per project for visual separation
+  const PROJ_COLORS = ['#388bfd','#bc8cff','#2ea043','#f0a500','#f85149','#d29922','#58a6ff','#7ee787'];
+  const projKeys = Object.keys(byProject).sort();
   let html = '';
-  let globalIdx = 0;
 
-  for (const proj of Object.keys(byProject).sort()) {
-    const ptasks = byProject[proj].sort((a,b) => (prio[a.priority]||2)-(prio[b.priority]||2));
+  projKeys.forEach((proj, pi) => {
+    const ptasks   = byProject[proj].sort((a,b) => (prio[a.priority]||2)-(prio[b.priority]||2));
     const doneCount = ptasks.filter(t => t.status === 'Done').length;
-    const pct = Math.round(doneCount / ptasks.length * 100);
+    const pct       = Math.round(doneCount / ptasks.length * 100);
+    const accentColor = PROJ_COLORS[pi % PROJ_COLORS.length];
+    const uid = `wdb-proj-${tasks[0]?.date || ''}-${pi}`;
 
-    html += `<div class="wdb-project-block">
-      <div class="wdb-project-header">
-        <span class="wdb-proj-pill">${escHTML(proj)}</span>
-        <div class="wdb-progress-wrap">
-          <div class="wdb-progress-bar"><div class="wdb-progress-fill" style="width:${pct}%"></div></div>
-          <span class="wdb-progress-label">${doneCount}/${ptasks.length} done</span>
+    html += `
+    <div class="wdb-project-block" style="border-left:3px solid ${accentColor};">
+      <div class="wdb-project-header" onclick="toggleWdbProject('${uid}')" style="border-left:none;">
+        <div class="wdb-proj-left">
+          <span class="wdb-proj-pill" style="color:${accentColor};background:${accentColor}22;border-color:${accentColor}44;">${escHTML(proj)}</span>
+          <span class="wdb-proj-task-count" style="color:${accentColor};">${ptasks.length} task${ptasks.length>1?'s':''}</span>
+        </div>
+        <div class="wdb-proj-right">
+          <div class="wdb-progress-wrap">
+            <div class="wdb-progress-bar"><div class="wdb-progress-fill" style="width:${pct}%;background:${accentColor};"></div></div>
+            <span class="wdb-progress-label" style="color:${accentColor};">${doneCount}/${ptasks.length}</span>
+          </div>
+          <span class="wdb-proj-toggle" id="${uid}-icon">▸</span>
         </div>
       </div>
-      <div class="wdb-task-list">`;
+      <div class="wdb-task-list" id="${uid}-body" style="display:none">`;
 
-    ptasks.forEach(t => {
-      globalIdx++;
-      const hasDetail = t.detail && t.detail.trim();
-      const uid = `wdt-${t.id}`;
-      // Parse detail lines into bullet list
-      const detailLines = hasDetail
-        ? t.detail.trim().split('\n').filter(l => l.trim())
-        : [];
+    ptasks.forEach((t, ti) => {
+      const hasDetail   = t.detail && t.detail.trim();
+      const detailLines = hasDetail ? t.detail.trim().split('\n').filter(l => l.trim()) : [];
 
-      html += `<div class="wdb-task-card" id="${uid}-card">
-        <div class="wdb-task-main" onclick="${hasDetail ? `toggleWdbDetail('${uid}')` : `openEditModal('${t.id}')`}">
-          <span class="wdb-task-num">${globalIdx}</span>
-          <span class="status-badge ${statusClass(t.status)}" style="font-size:10px;padding:2px 8px;flex-shrink:0;">${t.status}</span>
-          <div class="wdb-task-info">
-            <span class="wdb-task-name">${escHTML(t.task)}</span>
-            <div class="wdb-task-meta">
-              ${t.owner ? `<span class="wdb-meta-chip">👤 ${escHTML(t.owner)}</span>` : ''}
-              ${t.dueDate ? `<span class="wdb-meta-chip ${t.dueDate < todayISO() && t.status !== 'Done' ? 'wdb-overdue' : ''}">📅 ${fmtDate(t.dueDate)}</span>` : ''}
-              ${t.priority !== 'Medium' ? `<span class="wdb-meta-chip" style="color:var(--${t.priority==='Critical'||t.priority==='High'?'red':'blue'})">⬆ ${t.priority}</span>` : ''}
+      html += `
+        <div class="wdb-task-card">
+          <div class="wdb-task-main" onclick="openEditModal('${t.id}')">
+            <span class="wdb-task-num" style="border-color:${accentColor}33;color:${accentColor};">${ti+1}</span>
+            <span class="status-badge ${statusClass(t.status)}" style="font-size:10px;padding:2px 8px;flex-shrink:0;">${t.status}</span>
+            <div class="wdb-task-info">
+              <span class="wdb-task-name">${escHTML(t.task)}</span>
+              <div class="wdb-task-meta">
+                ${t.owner    ? `<span class="wdb-meta-chip">👤 ${escHTML(t.owner)}</span>` : ''}
+                ${t.dueDate  ? `<span class="wdb-meta-chip ${t.dueDate < todayISO() && t.status!=='Done'?'wdb-overdue':''}">📅 ${fmtDate(t.dueDate)}</span>` : ''}
+                ${t.priority !== 'Medium' ? `<span class="wdb-meta-chip" style="color:var(--${t.priority==='Critical'||t.priority==='High'?'red':'blue'})">⬆ ${t.priority}</span>` : ''}
+              </div>
             </div>
+            <button class="btn btn-sm" style="padding:2px 7px;font-size:11px;flex-shrink:0;opacity:0;" class="wdb-edit-btn"
+              onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0"
+              onclick="event.stopPropagation();openEditModal('${t.id}')">✏️</button>
           </div>
-          <div class="wdb-task-actions" onclick="event.stopPropagation()">
-            ${hasDetail ? `<span class="wdb-toggle-hint" id="${uid}-hint">▾ notes</span>` : ''}
-            <button class="btn btn-sm" style="padding:2px 7px;font-size:11px;" onclick="openEditModal('${t.id}')">✏️</button>
-          </div>
-        </div>
-        ${hasDetail ? `<div class="wdb-task-detail" id="${uid}-detail" style="display:none">
-          <ul class="wdb-detail-list">
-            ${detailLines.map(l => `<li>${escHTML(l.replace(/^[-•·*]\s*/,''))}</li>`).join('')}
-          </ul>
-        </div>` : ''}
-      </div>`;
+          ${detailLines.length ? `
+          <div class="wdb-task-notes">
+            ${detailLines.map(l=>`<div class="wdb-note-line"><span class="wdb-note-dot" style="background:${accentColor};"></span>${escHTML(l.replace(/^[-•·*]\s*/,''))}</div>`).join('')}
+          </div>` : ''}
+        </div>`;
     });
 
     html += `</div></div>`;
-  }
+  });
   return html;
 }
 
-function toggleWdbDetail(uid) {
-  const el   = document.getElementById(uid + '-detail');
-  const hint = document.getElementById(uid + '-hint');
-  if (!el) return;
-  const open = el.style.display === 'none';
-  el.style.display = open ? 'block' : 'none';
-  if (hint) hint.textContent = open ? '▴ notes' : '▾ notes';
+function toggleWdbProject(uid) {
+  const body = document.getElementById(uid + '-body');
+  const icon = document.getElementById(uid + '-icon');
+  if (!body) return;
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  if (icon) icon.textContent = open ? '▾' : '▸';
 }
 
 function toggleWeekDay(day) {
